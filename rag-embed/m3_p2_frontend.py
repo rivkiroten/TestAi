@@ -1,12 +1,12 @@
 import streamlit as st
-from backend import stream_rag_chain
+from m3_p2_backend import stream_rag_chain
 
 
 # --- Streamlit App ---
 
-st.set_page_config(page_title="Bank Chatbot with RAG", layout="centered")
+st.set_page_config(page_title="Angular Chatbot with RAG", layout="centered")
 
-st.title("🏦 Bank Chatbot")
+st.title("🏦 Angular Chatbot")
 
 # --- Sidebar for Inputs ---
 with st.sidebar:
