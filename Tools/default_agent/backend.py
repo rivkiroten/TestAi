@@ -3,6 +3,7 @@ from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.memory import MemorySaver
 from langchain.agents import create_agent
+from langchain_tavily import TavilySearch
 import requests
 
 load_dotenv()
@@ -41,9 +42,12 @@ def calc_conversion(currency_from: str, currency_to: str, amount: float):
         return f"Error calculating conversion: {str(e)}"
 
 
+tavily_tool = TavilySearch(max_results=3)
+
 tools = [
     get_conversion_rate,
-    calc_conversion
+    calc_conversion,
+    tavily_tool
 ]
 
 memory = MemorySaver()
@@ -54,8 +58,9 @@ agent_executor = create_agent(
 )
 
 def invoke_llm(user_input: str, thread_id: str):
+    system_msg = "Use web search ONLY for current/recent info, unknown facts, or explicit requests. DON'T use for general knowledge, programming, math, or definitions."
     response = agent_executor.invoke(
-        {"messages": [("user", user_input)]},
+        {"messages": [("system", system_msg), ("user", user_input)]},
         config={
             "configurable": {
                 "thread_id": thread_id
